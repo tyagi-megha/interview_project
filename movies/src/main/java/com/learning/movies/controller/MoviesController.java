@@ -66,4 +66,9 @@ public class MoviesController {
         List<Movie> movieList = movieService.getMovieByRatingGreaterThan(rating);
         return ResponseEntity.ok(new ApiResponse("Movies with rating greater than "+ rating, movieList));
     }
+
+    @GetMapping("/movie/{movieId}/movieById")
+    public Movie getMovieById(@PathVariable Long movieId){
+        return movieService.getMovieById(movieId);
+    }
 }
