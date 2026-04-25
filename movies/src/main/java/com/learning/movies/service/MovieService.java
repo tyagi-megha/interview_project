@@ -1,13 +1,15 @@
 package com.learning.movies.service;
 
-import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import com.learning.movies.model.Movie;
-import org.springframework.stereotype.Service;
 import com.learning.movies.repository.MovieRepository;
 import com.learning.movies.request.AddMovieRequest;
 import com.learning.movies.request.UpdateMovieRequest;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -57,7 +59,7 @@ public class MovieService implements IMovieService{
     @Override
     public Movie getMovieById(Long movieId) {
         return movieRepository.findById(movieId).orElseThrow(
-                () ->  new EntityNotFoundException("Movie not found")
+                () ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found")
         );
     }
 

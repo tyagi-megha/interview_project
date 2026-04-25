@@ -1,9 +1,6 @@
 package com.learning.movies.config.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.learning.movies.dto.UserDto;
-import com.learning.movies.integration.UserServiceClient;
-import com.learning.movies.request.UsernameRequest;
 import com.learning.movies.response.ErrorResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,8 +24,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtils;
-    @Autowired
-    private UserServiceClient userServiceClient;
+//    @Autowired
+//    private UserServiceClient userServiceClient;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -40,18 +37,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (StringUtils.hasText(jwt) ) {
                 String username = jwtUtils.extractUsername(jwt);
                 System.out.println("username : " + username);
-                UsernameRequest usernameRequest = new UsernameRequest();
+            /*    UsernameRequest usernameRequest = new UsernameRequest();
                 usernameRequest.setUsername(username);
                 UserDto user = userServiceClient.getUserByUsername(usernameRequest);
-                System.out.println("userid outer: " + user.getId());
+                System.out.println("userid outer: " + user.getId()); */
                 if(jwtUtils.validateToken(jwt, username)){
                   //  var auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     List<String> roles = jwtUtils.extractRoles(jwt);
+                    long userId = jwtUtils.extractUserId(jwt);
 
                     var authorities = roles.stream()
                             .map(SimpleGrantedAuthority::new)
                             .toList();
-                    System.out.println("userid" + user.getId());
+                    System.out.println("userid" + userId);
                     var auth = new UsernamePasswordAuthenticationToken(username, // 👈 store userId as principal
                             null,
                             authorities
